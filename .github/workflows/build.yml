@@ -33,44 +33,46 @@ jobs:
         cmake .. -DCMAKE_TOOLCHAIN_FILE=linux-x86_64.cmake
         make
         ls -l
-        cp -H libsoundio.so ../../linux/libsoundio.so
+        cp -H libsoundio.so* ../../linux
+
     - name: Upload Linux libraries
       uses: actions/upload-artifact@v1
       with:
-        name: linux-libsoundio.so
-        path: linux/libsoundio.so
+        name: linux
+        path: linux
 
-    - name: Build for Raspbian (armv6)
-      run: |
-        cp toolchains/raspbian-armv6z.cmake libsoundio
-        cd libsoundio
-        mkdir build-rpiv6
-        cd build-rpiv6
-        cmake .. -DCMAKE_TOOLCHAIN_FILE=raspbian-armv6z.cmake
-        make
-        ls -l
-        cp -H libsoundio.so ../../rpiv6/libsoundio.so
-    - name: Upload Raspbian libraries
-      uses: actions/upload-artifact@v1
-      with:
-        name: rpiv6-libsoundio.so
-        path: rpiv6/libsoundio.so
+    # TODO: Raspbian builds need ALSA
+    # - name: Build for Raspbian (armv6)
+    #   run: |
+    #     cp toolchains/raspbian-armv6z.cmake libsoundio
+    #     cd libsoundio
+    #     mkdir build-rpiv6
+    #     cd build-rpiv6
+    #     cmake .. -DCMAKE_TOOLCHAIN_FILE=raspbian-armv6z.cmake
+    #     make
+    #     ls -l
+    #     cp -H libsoundio.so* ../../rpiv6
+    # - name: Upload Raspbian libraries
+    #   uses: actions/upload-artifact@v1
+    #   with:
+    #     name: rpiv6
+    #     path: rpiv6
 
-    - name: Build for Raspbian (armv7)
-      run: |
-        cp toolchains/raspbian-armv7a.cmake libsoundio
-        cd libsoundio
-        mkdir build-rpiv7
-        cd build-rpiv7
-        cmake .. -DCMAKE_TOOLCHAIN_FILE=raspbian-armv7a.cmake
-        make
-        ls -l
-        cp -H libsoundio.so ../../rpiv7/libsoundio.so
-    - name: Upload Raspbian libraries
-      uses: actions/upload-artifact@v1
-      with:
-        name: rpiv7-libsoundio.so
-        path: rpiv7/libsoundio.so
+    # - name: Build for Raspbian (armv7)
+    #   run: |
+    #     cp toolchains/raspbian-armv7a.cmake libsoundio
+    #     cd libsoundio
+    #     mkdir build-rpiv7
+    #     cd build-rpiv7
+    #     cmake .. -DCMAKE_TOOLCHAIN_FILE=raspbian-armv7a.cmake
+    #     make
+    #     ls -l
+    #     cp -H libsoundio.so* ../../rpiv7
+    # - name: Upload Raspbian libraries
+    #   uses: actions/upload-artifact@v1
+    #   with:
+    #     name: rpiv7
+    #     path: rpiv7
 
   build_windows:
     runs-on: ubuntu-latest
@@ -95,11 +97,12 @@ jobs:
         make
         ls -l
         cp libsoundio.dll ../../win32/libsoundio.dll
+        cp libsoundio.dll.a ../../win32/soundio.lib
     - name: Upload Windows libraries
       uses: actions/upload-artifact@v1
       with:
-        name: win32-libsoundio.dll
-        path: win32/libsoundio.dll
+        name: win32
+        path: win32
 
     - name: Build for Windows (64 bit)
       run: |
@@ -112,11 +115,12 @@ jobs:
         make
         ls -l
         cp libsoundio.dll ../../win64/libsoundio.dll
+        cp libsoundio.dll.a ../../win64/soundio.lib
     - name: Upload Windows libraries
       uses: actions/upload-artifact@v1
       with:
-        name: win64-libsoundio.dll
-        path: win64/libsoundio.dll
+        name: win64
+        path: win64
 
   build_macos:
     runs-on: macos-latest
@@ -133,9 +137,9 @@ jobs:
         cmake .. -DCMAKE_TOOLCHAIN_FILE=darwin-x86_64.cmake
         make
         ls -l
-        cp -H libsoundio.dylib ../../darwin/libsoundio.dylib
+        cp -H libsoundio.dylib* ../../darwin
     - name: Upload macOS libraries
       uses: actions/upload-artifact@v1
       with:
-        name: darwin-libsoundio.dylib
-        path: darwin/libsoundio.dylib
+        name: darwin
+        path: darwin
