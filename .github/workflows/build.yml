@@ -19,6 +19,7 @@ jobs:
           alsa \
           pulseaudio \
           libasound2-dev \
+          patchelf \
           gcc-arm-linux-gnueabihf \
           g++-arm-linux-gnueabihf \
           gcc-arm-linux-gnueabi \
@@ -33,7 +34,8 @@ jobs:
         cmake .. -DCMAKE_TOOLCHAIN_FILE=linux-x86_64.cmake
         make
         ls -l
-        cp -H libsoundio.so* ../../linux
+        patchelf --set-rpath '/libsoundio.so' libsoundio.so.2.0.0
+        cp libsoundio.so.2.0.0 ../../linux/libsoundio.so
 
     - name: Upload Linux libraries
       uses: actions/upload-artifact@v1
@@ -137,7 +139,8 @@ jobs:
         cmake .. -DCMAKE_TOOLCHAIN_FILE=darwin-x86_64.cmake
         make
         ls -l
-        cp -H libsoundio.dylib* ../../darwin
+        install_name_tool -id @rpath/libsoundio.dylib libsoundio.2.0.0.dylib
+        cp libsoundio.2.0.0.dylib ../../darwin/libsoundio.dylib
     - name: Upload macOS libraries
       uses: actions/upload-artifact@v1
       with:
