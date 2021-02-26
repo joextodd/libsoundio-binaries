@@ -7,7 +7,38 @@ on:
 
 jobs:
 
-  build_linux:
+  # build_linux:
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #   - uses: actions/checkout@v2
+  #     with:
+  #       submodules: recursive
+  #   - name: Install dependencies
+  #     run: |
+  #       sudo apt-get install -y \
+  #         alsa \
+  #         libasound2-dev \
+  #         patchelf
+
+  #   - name: Build for Linux
+  #     run: |
+  #       cp toolchains/linux-x86_64.cmake libsoundio
+  #       cd libsoundio
+  #       mkdir build-linux
+  #       cd build-linux
+  #       cmake .. -DCMAKE_TOOLCHAIN_FILE=linux-x86_64.cmake
+  #       make
+  #       ls -l
+  #       patchelf --set-rpath '/libsoundio.so' libsoundio.so.2.0.0
+  #       cp libsoundio.so.2.0.0 ../../linux/libsoundio.so
+
+  #   - name: Upload Linux libraries
+  #     uses: actions/upload-artifact@v1
+  #     with:
+  #       name: linux
+  #       path: linux
+
+  build_raspbian:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v2
@@ -16,34 +47,12 @@ jobs:
     - name: Install dependencies
       run: |
         sudo apt-get install -y \
-          alsa \
-          pulseaudio \
-          libasound2-dev \
           patchelf \
           gcc-arm-linux-gnueabihf \
           g++-arm-linux-gnueabihf \
           gcc-arm-linux-gnueabi \
           g++-arm-linux-gnueabi
 
-    - name: Build for Linux
-      run: |
-        cp toolchains/linux-x86_64.cmake libsoundio
-        cd libsoundio
-        mkdir build-linux
-        cd build-linux
-        cmake .. -DCMAKE_TOOLCHAIN_FILE=linux-x86_64.cmake
-        make
-        ls -l
-        patchelf --set-rpath '/libsoundio.so' libsoundio.so.2.0.0
-        cp libsoundio.so.2.0.0 ../../linux/libsoundio.so
-
-    - name: Upload Linux libraries
-      uses: actions/upload-artifact@v1
-      with:
-        name: linux
-        path: linux
-
-    # TODO: Raspbian builds need ALSA
     # - name: Build for Raspbian (armv6)
     #   run: |
     #     cp toolchains/raspbian-armv6z.cmake libsoundio
@@ -60,89 +69,89 @@ jobs:
     #     name: rpiv6
     #     path: rpiv6
 
-    # - name: Build for Raspbian (armv7)
-    #   run: |
-    #     cp toolchains/raspbian-armv7a.cmake libsoundio
-    #     cd libsoundio
-    #     mkdir build-rpiv7
-    #     cd build-rpiv7
-    #     cmake .. -DCMAKE_TOOLCHAIN_FILE=raspbian-armv7a.cmake
-    #     make
-    #     ls -l
-    #     cp -H libsoundio.so* ../../rpiv7
-    # - name: Upload Raspbian libraries
-    #   uses: actions/upload-artifact@v1
-    #   with:
-    #     name: rpiv7
-    #     path: rpiv7
-
-  build_windows:
-    runs-on: ubuntu-latest
-    steps:
-    - uses: actions/checkout@v2
-      with:
-        submodules: recursive
-    - name: Install dependencies
+    - name: Build for Raspbian (armv7)
       run: |
-        sudo apt-get install -y \
-          mingw-w64 \
-          mingw-w64-tools
-
-    - name: Build for Windows (32 bit)
-      run: |
-        export MINGW_ARCH=32
-        cp toolchains/windows.cmake libsoundio
+        cp toolchains/raspbian-armv7a.cmake libsoundio
         cd libsoundio
-        mkdir build-win32 out-win32
-        cd build-win32
-        cmake .. -DCMAKE_TOOLCHAIN_FILE=windows.cmake -DCMAKE_INSTALL_PREFIX=../out-win32
+        mkdir build-rpiv7
+        cd build-rpiv7
+        cmake .. -DCMAKE_TOOLCHAIN_FILE=raspbian-armv7a.cmake
         make
         ls -l
-        cp libsoundio.dll ../../win32/libsoundio.dll
-        cp libsoundio.dll.a ../../win32/soundio.lib
-    - name: Upload Windows libraries
+        cp libsoundio.so.2.0.0 ../../rpiv7/libsoundio.so
+    - name: Upload Raspbian libraries
       uses: actions/upload-artifact@v1
       with:
-        name: win32
-        path: win32
+        name: rpiv7
+        path: rpiv7
 
-    - name: Build for Windows (64 bit)
-      run: |
-        export MINGW_ARCH=64
-        cp toolchains/windows.cmake libsoundio
-        cd libsoundio
-        mkdir build-win64 out-win64
-        cd build-win64
-        cmake .. -DCMAKE_TOOLCHAIN_FILE=windows.cmake -DCMAKE_INSTALL_PREFIX=../out-win64
-        make
-        ls -l
-        cp libsoundio.dll ../../win64/libsoundio.dll
-        cp libsoundio.dll.a ../../win64/soundio.lib
-    - name: Upload Windows libraries
-      uses: actions/upload-artifact@v1
-      with:
-        name: win64
-        path: win64
+  # build_windows:
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #   - uses: actions/checkout@v2
+  #     with:
+  #       submodules: recursive
+  #   - name: Install dependencies
+  #     run: |
+  #       sudo apt-get install -y \
+  #         mingw-w64 \
+  #         mingw-w64-tools
 
-  build_macos:
-    runs-on: macos-latest
-    steps:
-    - uses: actions/checkout@v2
-      with:
-        submodules: recursive
-    - name: Build
-      run: |
-        cp toolchains/darwin-x86_64.cmake libsoundio
-        cd libsoundio
-        mkdir build-macos
-        cd build-macos
-        cmake .. -DCMAKE_TOOLCHAIN_FILE=darwin-x86_64.cmake
-        make
-        ls -l
-        install_name_tool -id @rpath/libsoundio.dylib libsoundio.2.0.0.dylib
-        cp libsoundio.2.0.0.dylib ../../darwin/libsoundio.dylib
-    - name: Upload macOS libraries
-      uses: actions/upload-artifact@v1
-      with:
-        name: darwin
-        path: darwin
+  #   - name: Build for Windows (32 bit)
+  #     run: |
+  #       export MINGW_ARCH=32
+  #       cp toolchains/windows.cmake libsoundio
+  #       cd libsoundio
+  #       mkdir build-win32 out-win32
+  #       cd build-win32
+  #       cmake .. -DCMAKE_TOOLCHAIN_FILE=windows.cmake -DCMAKE_INSTALL_PREFIX=../out-win32
+  #       make
+  #       ls -l
+  #       cp libsoundio.dll ../../win32/libsoundio.dll
+  #       cp libsoundio.dll.a ../../win32/soundio.lib
+  #   - name: Upload Windows libraries
+  #     uses: actions/upload-artifact@v1
+  #     with:
+  #       name: win32
+  #       path: win32
+
+  #   - name: Build for Windows (64 bit)
+  #     run: |
+  #       export MINGW_ARCH=64
+  #       cp toolchains/windows.cmake libsoundio
+  #       cd libsoundio
+  #       mkdir build-win64 out-win64
+  #       cd build-win64
+  #       cmake .. -DCMAKE_TOOLCHAIN_FILE=windows.cmake -DCMAKE_INSTALL_PREFIX=../out-win64
+  #       make
+  #       ls -l
+  #       cp libsoundio.dll ../../win64/libsoundio.dll
+  #       cp libsoundio.dll.a ../../win64/soundio.lib
+  #   - name: Upload Windows libraries
+  #     uses: actions/upload-artifact@v1
+  #     with:
+  #       name: win64
+  #       path: win64
+
+  # build_macos:
+  #   runs-on: macos-latest
+  #   steps:
+  #   - uses: actions/checkout@v2
+  #     with:
+  #       submodules: recursive
+  #   - name: Build
+  #     run: |
+  #       cp toolchains/darwin-x86_64.cmake libsoundio
+  #       cd libsoundio
+  #       mkdir build-macos
+  #       cd build-macos
+  #       cmake .. -DCMAKE_TOOLCHAIN_FILE=darwin-x86_64.cmake
+  #       make
+  #       ls -l
+  #       install_name_tool -id @rpath/libsoundio.dylib libsoundio.2.0.0.dylib
+  #       cp libsoundio.2.0.0.dylib ../../darwin/libsoundio.dylib
+  #   - name: Upload macOS libraries
+  #     uses: actions/upload-artifact@v1
+  #     with:
+  #       name: darwin
+  #       path: darwin
