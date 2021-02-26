@@ -26,7 +26,7 @@ jobs:
   #       cd libsoundio
   #       mkdir build-linux
   #       cd build-linux
-  #       cmake .. -DCMAKE_TOOLCHAIN_FILE=linux-x86_64.cmake
+  #       cmake .. -DCMAKE_TOOLCHAIN_FILE=linux-x86_64.cmake -DBUILD_EXAMPLE_PROGRAMS=off -DBUILD_TESTS=off
   #       make
   #       ls -l
   #       patchelf --set-rpath '/libsoundio.so' libsoundio.so.2.0.0
@@ -59,7 +59,7 @@ jobs:
     #     cd libsoundio
     #     mkdir build-rpiv6
     #     cd build-rpiv6
-    #     cmake .. -DCMAKE_TOOLCHAIN_FILE=raspbian-armv6z.cmake
+    #     cmake .. -DCMAKE_TOOLCHAIN_FILE=raspbian-armv6z.cmake -DBUILD_EXAMPLE_PROGRAMS=off -DBUILD_TESTS=off
     #     make
     #     ls -l
     #     cp -H libsoundio.so* ../../rpiv6
@@ -75,7 +75,7 @@ jobs:
         cd libsoundio
         mkdir build-rpiv7
         cd build-rpiv7
-        cmake .. -DCMAKE_TOOLCHAIN_FILE=raspbian-armv7a.cmake
+        cmake .. -DCMAKE_TOOLCHAIN_FILE=raspbian-armv7a.cmake -DBUILD_EXAMPLE_PROGRAMS=off -DBUILD_TESTS=off
         make
         ls -l
         cp libsoundio.so.2.0.0 ../../rpiv7/libsoundio.so
@@ -104,7 +104,7 @@ jobs:
   #       cd libsoundio
   #       mkdir build-win32 out-win32
   #       cd build-win32
-  #       cmake .. -DCMAKE_TOOLCHAIN_FILE=windows.cmake -DCMAKE_INSTALL_PREFIX=../out-win32
+  #       cmake .. -DCMAKE_TOOLCHAIN_FILE=windows.cmake -DCMAKE_INSTALL_PREFIX=../out-win32 -DBUILD_EXAMPLE_PROGRAMS=off -DBUILD_TESTS=off
   #       make
   #       ls -l
   #       cp libsoundio.dll ../../win32/libsoundio.dll
@@ -122,7 +122,7 @@ jobs:
   #       cd libsoundio
   #       mkdir build-win64 out-win64
   #       cd build-win64
-  #       cmake .. -DCMAKE_TOOLCHAIN_FILE=windows.cmake -DCMAKE_INSTALL_PREFIX=../out-win64
+  #       cmake .. -DCMAKE_TOOLCHAIN_FILE=windows.cmake -DCMAKE_INSTALL_PREFIX=../out-win64 -DBUILD_EXAMPLE_PROGRAMS=off -DBUILD_TESTS=off
   #       make
   #       ls -l
   #       cp libsoundio.dll ../../win64/libsoundio.dll
@@ -145,7 +145,7 @@ jobs:
   #       cd libsoundio
   #       mkdir build-macos
   #       cd build-macos
-  #       cmake .. -DCMAKE_TOOLCHAIN_FILE=darwin-x86_64.cmake
+  #       cmake .. -DCMAKE_TOOLCHAIN_FILE=darwin-x86_64.cmake -DBUILD_EXAMPLE_PROGRAMS=off -DBUILD_TESTS=off
   #       make
   #       ls -l
   #       install_name_tool -id @rpath/libsoundio.dylib libsoundio.2.0.0.dylib

@@ -5,6 +5,9 @@ SET(CMAKE_SYSTEM_VERSION 1)
 SET(CMAKE_C_COMPILER arm-linux-gnueabihf-gcc)
 SET(CMAKE_CXX_COMPILER arm-linux-gnueabihf-g++)
 
+SET(ALSA_LIBRARY ${CMAKE_CURRENT_SOURCE_DIR}/../libraries/rpiv6/libasound.so)
+SET(ALSA_INCLUDE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/../libraries/include)
+
 add_compile_options(
         -mfpu=vfp
         -mfloat-abi=hard
