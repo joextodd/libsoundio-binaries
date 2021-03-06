@@ -1,9 +1,12 @@
 name: build
 
 on:
-  push:
-    branches:
-      - main
+  workflow_dispatch:
+    inputs:
+      debug:
+        description: 'Enable debug'
+        required: false
+        default: 'no'
 
 jobs:
 
@@ -29,8 +32,9 @@ jobs:
         cmake .. -DCMAKE_TOOLCHAIN_FILE=linux-x86_64.cmake -DBUILD_EXAMPLE_PROGRAMS=off -DBUILD_TESTS=off
         make
         ls -l
-        patchelf --set-rpath '/libsoundio.so' libsoundio.so.2.0.0
-        cp libsoundio.so.2.0.0 ../../linux/libsoundio.so
+        cp libsoundio.so.2.0.0 ../../linux/libsoundio-2.0.0.so
+        cd ../../linux
+        patchelf --set-soname libsoundio-2.0.0.so libsoundio-2.0.0.so
 
     - name: Upload Linux libraries
       uses: actions/upload-artifact@v1
@@ -62,7 +66,9 @@ jobs:
         cmake .. -DCMAKE_TOOLCHAIN_FILE=raspbian-armv6z.cmake -DBUILD_EXAMPLE_PROGRAMS=off -DBUILD_TESTS=off
         make
         ls -l
-        cp libsoundio.so.2.0.0 ../../rpiv6/libsoundio.so
+        cp libsoundio.so.2.0.0 ../../rpiv6/libsoundio-2.0.0.so
+        cd ../../rpiv6
+        patchelf --set-soname libsoundio-2.0.0.so libsoundio-2.0.0.so
     - name: Upload Raspbian libraries
       uses: actions/upload-artifact@v1
       with:
@@ -78,7 +84,9 @@ jobs:
         cmake .. -DCMAKE_TOOLCHAIN_FILE=raspbian-armv7a.cmake -DBUILD_EXAMPLE_PROGRAMS=off -DBUILD_TESTS=off
         make
         ls -l
-        cp libsoundio.so.2.0.0 ../../rpiv7/libsoundio.so
+        cp libsoundio.so.2.0.0 ../../rpiv7/libsoundio-2.0.0.so
+        cd ../../rpiv7
+        patchelf --set-soname libsoundio-2.0.0.so libsoundio-2.0.0.so
     - name: Upload Raspbian libraries
       uses: actions/upload-artifact@v1
       with:
@@ -148,8 +156,8 @@ jobs:
         cmake .. -DCMAKE_TOOLCHAIN_FILE=darwin-x86_64.cmake -DBUILD_EXAMPLE_PROGRAMS=off -DBUILD_TESTS=off
         make
         ls -l
-        install_name_tool -id @rpath/libsoundio.dylib libsoundio.2.0.0.dylib
-        cp libsoundio.2.0.0.dylib ../../darwin/libsoundio.dylib
+        cp libsoundio.2.0.0.dylib ../../darwin/
+        install_name_tool -id @rpath/libsoundio.2.0.0.dylib libsoundio.2.0.0.dylib
     - name: Upload macOS libraries
       uses: actions/upload-artifact@v1
       with:
