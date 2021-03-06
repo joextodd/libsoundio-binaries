@@ -157,6 +157,7 @@ jobs:
         make
         ls -l
         cp libsoundio.2.0.0.dylib ../../darwin/
+        cd ../../darwin
         install_name_tool -id @rpath/libsoundio.2.0.0.dylib libsoundio.2.0.0.dylib
     - name: Upload macOS libraries
       uses: actions/upload-artifact@v1
